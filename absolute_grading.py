@@ -1,6 +1,3 @@
-import pandas as pd
-
-
 def assign_grade(marks):
     if marks >= 85:
         return 'A (3.67 - 4.00)'

@@ -4,7 +4,7 @@ import requests
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-
+from absolute_grading import *
 app = Flask(__name__)
 app.secret_key = 'hello'
 app.config["SESSION_PERMANENT"] = False
@@ -41,8 +41,9 @@ def calculate_grades():
     filename = request.args.get('filename')
     if filename:
         df = pd.read_csv(f"uploads/{filename}")
-        rows = df.values.tolist()
-        columns = df.columns.tolist()
+        grades = generate_grade_report(df)
+        rows = grades.values.tolist()
+        columns = grades.columns.tolist()
         return render_template("grades.html", columns=columns, rows=rows)
     else:
         return "No file uploaded"
