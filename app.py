@@ -44,6 +44,9 @@ def calculate_grades():
         grades = generate_grade_report(df)
         rows = grades.values.tolist()
         columns = grades.columns.tolist()
+        format = ["name", "reg number", "marks"]
+        if columns.tolower() != format:
+            return "Enter in the specified format"
         return render_template("grades.html", columns=columns, rows=rows)
     else:
         return "No file uploaded"
