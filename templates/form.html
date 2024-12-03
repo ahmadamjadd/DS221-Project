@@ -25,7 +25,31 @@
       <label for="csv_file" class="form-label">Choose a CSV file</label>
       <input type="file" id="csv_file" name="csv_file" accept=".csv" class="form-control" required>
       <div class="invalid-feedback">
-        Please select a valid CSV file.
+          Please select a valid CSV file.
+      </div>
+    </div>
+
+    <!-- Dropdown for selecting options -->
+    <div class="mb-3">
+      <label for="options" class="form-label">Select an option</label>
+      <select id="options" name="options" class="form-select" required>
+        <option value="" disabled selected>Select an option</option>
+        <option value="Absolute">Absolute Grading</option>
+        <option value="Relative">Relative Grading</option>
+      </select>
+      <div class="invalid-feedback">
+          Please select an option.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <select id="type" name="type" class="form-select" required>
+        <option value="" disabled selected>Select an option</option>
+        <option value="custom">Custom Grading</option>
+        <option value="fixed">Fixed Grading</option>
+      </select>
+      <div class="invalid-feedback">
+          Please select an option.
       </div>
     </div>
 

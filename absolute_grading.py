@@ -1,26 +1,26 @@
 def assign_grade(marks):
     if marks >= 85:
-        return 'A (3.67 - 4.00)'
+        return 'A'
     elif 80 <= marks <= 84:
-        return 'A- (3.34 - 3.66)'
+        return 'A-'
     elif 75 <= marks <= 79:
-        return 'B+ (3.01 - 3.33)'
+        return 'B+'
     elif 71 <= marks <= 74:
-        return 'B (2.67 - 3.00)'
+        return 'B'
     elif 68 <= marks <= 70:
-        return 'B- (2.34 - 2.66)'
+        return 'B-'
     elif 64 <= marks <= 67:
-        return 'C+ (2.01 - 2.33)'
+        return 'C+'
     elif 61 <= marks <= 63:
-        return 'C (1.67 - 2.00)'
+        return 'C'
     elif 58 <= marks <= 60:
-        return 'C- (1.31 - 1.66)'
+        return 'C-'
     elif 54 <= marks <= 57:
-        return 'D+ (1.01 - 1.30)'
+        return 'D+'
     elif 50 <= marks <= 53:
-        return 'D (0.10 - 1.00)'
+        return 'D'
     else:
-        return 'F (0.00)'
+        return 'F'
     
 
 def generate_grade_report(df):

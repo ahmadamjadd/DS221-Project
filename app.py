@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 from absolute_grading import *
+from relativegrading import *
 app = Flask(__name__)
 app.secret_key = 'hello'
 app.config["SESSION_PERMANENT"] = False
@@ -30,6 +31,8 @@ def upload_file():
     if 'csv_file' not in request.files:
         return redirect(request.url)
     file = request.files['csv_file']
+    selected_option = request.form.get('options')
+    selected_method = request.form.get('type')
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
 
@@ -47,7 +50,7 @@ def upload_file():
                 warnings = "Enter in specified format"
                 return render_template("form.html", warnings=warnings)
             
-            return redirect(url_for('calculate_grades', filename=filename))
+            return redirect(url_for('calculate_grades', filename=filename, selected_option=selected_option, selected_method=selected_method))
     
         except Exception as e:
             os.remove(file_path) 
@@ -59,9 +62,25 @@ def upload_file():
 @app.route("/grades", methods=["GET"])
 def calculate_grades():
     filename = request.args.get('filename')
+    option = request.args.get('selected_option')
+    type = request.args.get('selected_method')
+
     if filename:
+
         df = pd.read_csv(f"uploads/{filename}")
-        grades = generate_grade_report(df)
+
+        if option == "Relative":
+
+            if type == "fixed":
+                grades = grade_with_hec_thresholds(df)
+            elif type == "custom":
+                return render_template("relative_threshold.html", option=option)
+            
+        elif option == "Absolute":
+            if type == "fixed":
+                grades = generate_grade_report(df)
+            elif type == "custom":
+                return render_template("absolute_threshold.html", option=option)
         rows = grades.values.tolist()
         columns = grades.columns.tolist()
         return render_template("grades.html", columns=columns, rows=rows)
