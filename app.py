@@ -50,6 +50,10 @@ def upload_file():
                 warnings = "Enter in specified format"
                 return render_template("form.html", warnings=warnings)
             
+            session['filename'] = filename
+            session['selected_option'] = selected_option
+            session['selected_method'] = selected_method
+            
             return redirect(url_for('calculate_grades', filename=filename, selected_option=selected_option, selected_method=selected_method))
     
         except Exception as e:
@@ -78,7 +82,7 @@ def calculate_grades():
             
         elif option == "Absolute":
             if type == "fixed":
-                grades = generate_grade_report(df)
+                grades = grade_with_hec_absolute(df)
             elif type == "custom":
                 return render_template("absolute_threshold.html", option=option)
         rows = grades.values.tolist()
@@ -86,3 +90,123 @@ def calculate_grades():
         return render_template("grades.html", columns=columns, rows=rows)
     else:
         return "No file uploaded"
+    
+@app.route("/absolute_grading", methods=["GET", "POST"])
+def custom_marks():
+    if request.method == "POST":
+
+        # Collect data from the form
+        grade_A_plus_min = request.form.get("grade_A_plus_min")
+        grade_A_plus_max = request.form.get("grade_A_plus_max")
+        
+        grade_A_min = request.form.get("grade_A_min")
+        grade_A_max = request.form.get("grade_A_max")
+        
+        grade_A_minus_min = request.form.get("grade_A_minus_min")
+        grade_A_minus_max = request.form.get("grade_A_minus_max")
+        
+        grade_B_plus_min = request.form.get("grade_B_plus_min")
+        grade_B_plus_max = request.form.get("grade_B_plus_max")
+        
+        grade_B_min = request.form.get("grade_B_min")
+        grade_B_max = request.form.get("grade_B_max")
+        
+        grade_B_minus_min = request.form.get("grade_B_minus_min")
+        grade_B_minus_max = request.form.get("grade_B_minus_max")
+        
+        grade_C_plus_min = request.form.get("grade_C_plus_min")
+        grade_C_plus_max = request.form.get("grade_C_plus_max")
+        
+        grade_C_min = request.form.get("grade_C_min")
+        grade_C_max = request.form.get("grade_C_max")
+        
+        grade_C_minus_min = request.form.get("grade_C_minus_min")
+        grade_C_minus_max = request.form.get("grade_C_minus_max")
+        
+        grade_D_min = request.form.get("grade_D_min")
+        grade_D_max = request.form.get("grade_D_max")
+        
+        # Create a dictionary with all the collected marks ranges
+        grade = {
+            "A_plus": (int(grade_A_plus_min), int(grade_A_plus_max)),
+            "A": (int(grade_A_min), int(grade_A_max)),
+            "A_minus": (int(grade_A_minus_min), int(grade_A_minus_max)),
+            "B_plus": (int(grade_B_plus_min), int(grade_B_plus_max)),
+            "B": (int(grade_B_min), int(grade_B_max)),
+            "B_minus": (int(grade_B_minus_min), int(grade_B_minus_max)),
+            "C_plus": (int(grade_C_plus_min), int(grade_C_plus_max)),
+            "C": (int(grade_C_min), int(grade_C_max)),
+            "C_minus": (int(grade_C_minus_min), int(grade_C_minus_max)),
+            "D": (int(grade_D_min), int(grade_D_max))
+        }
+
+
+        filename = session.get('filename')
+        if filename:
+            df = pd.read_csv(f"uploads/{filename}")
+            marks = grade_with_custom_absolute(df, grade)
+            rows = marks.values.tolist()
+            columns = marks.columns.tolist()
+            return render_template("grades.html", columns=columns, rows=rows)
+    else:
+        return render_template("absolute_threshold.html")
+    
+@app.route("/relative_grading", methods=["GET", "POST"])
+def custom_relative_marks():
+    if request.method == "POST":
+
+        # Collect data from the form
+        grade_A_plus_min = request.form.get("grade_A_plus_min")
+        grade_A_plus_max = request.form.get("grade_A_plus_max")
+        
+        grade_A_min = request.form.get("grade_A_min")
+        grade_A_max = request.form.get("grade_A_max")
+        
+        grade_A_minus_min = request.form.get("grade_A_minus_min")
+        grade_A_minus_max = request.form.get("grade_A_minus_max")
+        
+        grade_B_plus_min = request.form.get("grade_B_plus_min")
+        grade_B_plus_max = request.form.get("grade_B_plus_max")
+        
+        grade_B_min = request.form.get("grade_B_min")
+        grade_B_max = request.form.get("grade_B_max")
+        
+        grade_B_minus_min = request.form.get("grade_B_minus_min")
+        grade_B_minus_max = request.form.get("grade_B_minus_max")
+        
+        grade_C_plus_min = request.form.get("grade_C_plus_min")
+        grade_C_plus_max = request.form.get("grade_C_plus_max")
+        
+        grade_C_min = request.form.get("grade_C_min")
+        grade_C_max = request.form.get("grade_C_max")
+        
+        grade_C_minus_min = request.form.get("grade_C_minus_min")
+        grade_C_minus_max = request.form.get("grade_C_minus_max")
+        
+        grade_D_min = request.form.get("grade_D_min")
+        grade_D_max = request.form.get("grade_D_max")
+        
+        # Create a dictionary with all the collected marks ranges
+        grade = {
+            "A_plus": (int(grade_A_plus_min), int(grade_A_plus_max)),
+            "A": (int(grade_A_min), int(grade_A_max)),
+            "A_minus": (int(grade_A_minus_min), int(grade_A_minus_max)),
+            "B_plus": (int(grade_B_plus_min), int(grade_B_plus_max)),
+            "B": (int(grade_B_min), int(grade_B_max)),
+            "B_minus": (int(grade_B_minus_min), int(grade_B_minus_max)),
+            "C_plus": (int(grade_C_plus_min), int(grade_C_plus_max)),
+            "C": (int(grade_C_min), int(grade_C_max)),
+            "C_minus": (int(grade_C_minus_min), int(grade_C_minus_max)),
+            "D": (int(grade_D_min), int(grade_D_max))
+        }
+
+
+        filename = session.get('filename')
+        if filename:
+            df = pd.read_csv(f"uploads/{filename}")
+            marks = grade_with_custom_relative(df, grade)
+            rows = marks.values.tolist()
+            columns = marks.columns.tolist()
+            return render_template("grades.html", columns=columns, rows=rows)
+    else:
+        return render_template("relative_threshold.html")
