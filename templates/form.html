@@ -2,13 +2,37 @@
 
 {% block main %}
 
-  <h1>Upload CSV File</h1>
+<div class="container mt-5">
+  {% if warnings %}
+    <!-- Alert box for warnings -->
+    <div id="alert-box" class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{ warnings }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-  <form action="/upload" method="POST" enctype="multipart/form-data">
-    
-    <label for="csv_file">Choose a CSV file:</label>
-    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-    <button type="submit">Upload</button>
+    <script>
+      // Ensure the alert box is visible after the page is rendered
+      document.getElementById("alert-box").style.display = "block";
+    </script>
+  {% endif %}
 
+  <!-- Heading -->
+  <h1 class="mb-4 text-center">Upload CSV File</h1>
+
+  <!-- Form for uploading CSV -->
+  <form action="/upload" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <div class="mb-3">
+      <label for="csv_file" class="form-label">Choose a CSV file</label>
+      <input type="file" id="csv_file" name="csv_file" accept=".csv" class="form-control" required>
+      <div class="invalid-feedback">
+        Please select a valid CSV file.
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </div>
   </form>
+</div>
+
 {% endblock %}

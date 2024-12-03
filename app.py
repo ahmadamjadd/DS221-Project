@@ -14,6 +14,8 @@ UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+Session(app)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -29,10 +31,28 @@ def upload_file():
         return redirect(request.url)
     file = request.files['csv_file']
     if file and allowed_file(file.filename):
-        # Secure the filename and save it to the upload folder
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('calculate_grades', filename=filename))
+
+        # Save the uploaded folder
+        upload_folder = app.config['UPLOAD_FOLDER']
+        file_path = os.path.join(upload_folder, filename)
+        file.save(file_path)
+        try:
+            # Read the head
+            df = pd.read_csv(f"uploads/{filename}", nrows=1)
+            columns = df.columns.tolist()
+            format = ["name", "reg", "marks"]
+            if [col.lower() for col in columns] != format:
+                os.remove(file_path)
+                warnings = "Enter in specified format"
+                return render_template("form.html", warnings=warnings)
+            
+            return redirect(url_for('calculate_grades', filename=filename))
+    
+        except Exception as e:
+            os.remove(file_path) 
+            warnings = f"Error reading the CSV file. {str(e)}"
+            return render_template("form.html", warnings=warnings)
     else:
         return "Invalid file format. Please upload a CSV file."
     
@@ -44,9 +64,6 @@ def calculate_grades():
         grades = generate_grade_report(df)
         rows = grades.values.tolist()
         columns = grades.columns.tolist()
-        format = ["name", "reg number", "marks"]
-        if columns.tolower() != format:
-            return "Enter in the specified format"
         return render_template("grades.html", columns=columns, rows=rows)
     else:
         return "No file uploaded"
