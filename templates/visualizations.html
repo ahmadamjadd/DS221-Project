@@ -1,28 +1,111 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h1>Here goes the pics</h1>
+<h1 class="display-5 fw-bold text-info text-center" style="font-weight: 900;">Here are the Statistics and Graphs</h1>
 
-<!-- Display the saved statistics -->
-<div>
-    <h2>Statistics</h2>
-    <pre>{{ statistics }}</pre> <!-- The statistics will be printed here -->
+<!-- Display the saved statistics in a beautiful container -->
+<div class="container my-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-info">Statistics</h2>
+        <pre>{{ statistics }}</pre> <!-- The statistics will be printed here -->
+    </div>
 </div>
 
-<!-- Display the saved graphs -->
-<div>
-    <h2>Graphs</h2>
-    <h3>Histogram of Marks</h3>
-    <img src="{{ graph_paths['histogram'] }}" alt="Histogram of Marks" width="500" />
-    
-    <h3>Boxplot of Marks</h3>
-    <img src="{{ graph_paths.boxplot }}" alt="Boxplot of Marks" width="500" />
+<!-- Display the saved graphs in 2x2 grid -->
+<div class="row g-4">
+    <!-- First Row -->
+    <div class="col-md-6">
+        <h3 class="text-center text-info">Histogram of Marks</h3>
+        <img src="{{ graph_paths['histogram'] }}" alt="Histogram of Marks" class="graph-img w-100 img-hover" data-image="{{ graph_paths['histogram'] }}" onclick="openImage(this)" />
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center text-info">Boxplot of Marks</h3>
+        <img src="{{ graph_paths['boxplot'] }}" alt="Boxplot of Marks" class="graph-img w-100 img-hover" data-image="{{ graph_paths['boxplot'] }}" onclick="openImage(this)" />
+    </div>
 
-    <h3>Normalized Histogram of Marks</h3>
-    <img src="{{ graph_paths.normalized_histogram }}" alt="Normalized Histogram of Marks" width="500" />
-
-    <h3>Bar Plot of Grades</h3>
-    <img src="{{ graph_paths.grades_barplot }}" alt="Bar Plot of Grades" width="500" />
+    <!-- Second Row -->
+    <div class="col-md-6">
+        <h3 class="text-center text-info">Normalized Histogram of Marks</h3>
+        <img src="{{ graph_paths['normalized_histogram'] }}" alt="Normalized Histogram of Marks" class="graph-img w-100 img-hover" data-image="{{ graph_paths['normalized_histogram'] }}" onclick="openImage(this)" />
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center text-info">Bar Plot of Grades</h3>
+        <img src="{{ graph_paths['grades_barplot'] }}" alt="Bar Plot of Grades" class="graph-img w-100 img-hover" data-image="{{ graph_paths['grades_barplot'] }}" onclick="openImage(this)" />
+    </div>
 </div>
+
+<!-- Modal for viewing images in large size -->
+<div class="modal fade" id="graphModal" tabindex="-1" aria-labelledby="graphModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info" id="graphModalLabel">Graph</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Graph" class="img-fluid w-100" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center my-4">
+    <button id="downloadBtn" class="btn btn-primary">Download All as Zip</button>
+</div>
+
+<script>
+    document.getElementById("downloadBtn").onclick = function() {
+        var filename = "{{ filename }}";  // Pass the dynamic filename from Flask context
+        var link = document.createElement("a");
+        link.href = "{{ url_for('download_files', filename='') }}" + filename;  // The Flask URL for downloading
+        link.download = filename + ".zip"; // Set the filename for the downloaded zip
+        link.click();  // Trigger the download
+    };
+</script>
+
+<script>
+    // Function to open the image in the modal
+    function openImage(element) {
+        var imagePath = element.getAttribute('data-image');
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imagePath; // Set the modal image source to the clicked image's source
+        var myModal = new bootstrap.Modal(document.getElementById('graphModal'));
+        myModal.show(); // Show the modal when an image is clicked
+    }
+</script>
+
+<style>
+    /* Hover effect for the images */
+    .img-hover {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .img-hover:hover {
+        transform: scale(1.1); /* Slight zoom effect */
+    }
+
+    /* Styling for the statistics container */
+    .card {
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .card pre {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Courier New', Courier, monospace;
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>
 
 {% endblock %}

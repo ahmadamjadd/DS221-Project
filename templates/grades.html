@@ -1,28 +1,35 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h1>Data from CSV</h1>
+  <div class="container mt-5">
+    <!-- Centered Heading with a more fitting title and thicker font -->
+    <h1 class="display-5 fw-bold text-info text-center" style="font-weight: 900;">Student Grade Data Overview</h1>
 
-<a href="visualizations">
-        <button>Graphs</button>
-    </a>
+    <!-- Button for navigation to Graphs page -->
+    <div class="d-flex justify-content-center mb-4">
+      <a href="visualizations">
+        <button class="btn btn-gradient px-4 py-2 rounded-pill shadow-lg">View Graphs</button>
+      </a>
+    </div>
 
-<table class="table table-bordered">
-    <thead>
+    <!-- Table with rounded corners, beautiful styling, and hover effect -->
+    <table class="table table-bordered table-striped rounded-3 shadow-sm">
+      <thead class="table-dark text-white">
         <tr>
-            {% for column in columns %}
-            <th>{{ column }}</th>
-            {% endfor %}
+          {% for column in columns %}
+            <th class="px-4 py-2">{{ column }}</th>
+          {% endfor %}
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for row in rows %}
-        <tr>
+          <tr class="table-hover">
             {% for value in row %}
-            <td>{{ value }}</td>
+              <td class="px-4 py-3">{{ value }}</td>
             {% endfor %}
-        </tr>
+          </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

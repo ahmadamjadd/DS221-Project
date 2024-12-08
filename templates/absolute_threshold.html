@@ -1,107 +1,84 @@
 {% extends "layout.html" %}
 
 {% block main %}
-
   <div class="container mt-5">
-    <h1 class="mb-4 text-center">Define Grade Ranges</h1>
+    <!-- Centered Heading with a thicker font and a more fitting title -->
+    <h1 class="display-5 fw-bold text-info text-center" style="font-weight: 900;">Define Grade Ranges for the Grading System</h1>
+
+    <!-- Warning Message -->
+    <div id="warningMessage" class="alert alert-danger mt-3" style="display: none; opacity: 0; transition: opacity 1s;">
+      <strong>Warning:</strong> <span id="warningDetails"></span>
+    </div>
 
     <!-- Form for setting grade ranges -->
-    <form action="/absolute_grading" method="POST" class="needs-validation" novalidate>
-      <div class="mb-3">
-        <label for="grade_A_plus" class="form-label">A+ Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_A_plus_min" name="grade_A_plus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_A_plus_max" name="grade_A_plus_max" class="form-control" placeholder="To" min="0" max="100" required>
+    <form id="gradeForm" action="/relative_grading" method="POST" class="needs-validation" novalidate>
+      {% for grade in ['A_plus', 'A', 'A_minus', 'B_plus', 'B', 'B_minus', 'C_plus', 'C', 'C_minus', 'D'] %}
+        <div class="mb-3">
+          <label for="grade_{{ grade }}" class="form-label"> {{ grade|replace('_', ' ')|title }} Range:</label>
+          <div class="d-flex">
+            <input type="number" id="grade_{{ grade }}_min" name="grade_{{ grade }}_min" class="form-control" placeholder="From" min="0" max="100" required>
+            <span class="mx-2">-</span>
+            <input type="number" id="grade_{{ grade }}_max" name="grade_{{ grade }}_max" class="form-control" placeholder="To" min="0" max="100" required>
+          </div>
         </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_A" class="form-label">A Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_A_min" name="grade_A_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_A_max" name="grade_A_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_A_minus" class="form-label">A- Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_A_minus_min" name="grade_A_minus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_A_minus_max" name="grade_A_minus_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_B_plus" class="form-label">B+ Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_B_plus_min" name="grade_B_plus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_B_plus_max" name="grade_B_plus_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_B" class="form-label">B Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_B_min" name="grade_B_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_B_max" name="grade_B_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_B_minus" class="form-label">B- Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_B_minus_min" name="grade_B_minus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_B_minus_max" name="grade_B_minus_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_C_plus" class="form-label">C+ Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_C_plus_min" name="grade_C_plus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_C_plus_max" name="grade_C_plus_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_C" class="form-label">C Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_C_min" name="grade_C_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_C_max" name="grade_C_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_C_minus" class="form-label">C- Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_C_minus_min" name="grade_C_minus_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_C_minus_max" name="grade_C_minus_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="grade_D" class="form-label">D Range:</label>
-        <div class="d-flex">
-          <input type="number" id="grade_D_min" name="grade_D_min" class="form-control" placeholder="From" min="0" max="100" required>
-          <span class="mx-2">-</span>
-          <input type="number" id="grade_D_max" name="grade_D_max" class="form-control" placeholder="To" min="0" max="100" required>
-        </div>
-      </div>
+      {% endfor %}
 
       <!-- Submit Button -->
       <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary">Submit Grade Ranges</button>
+        <button type="submit" class="btn btn-gradient btn-lg px-4 py-2 rounded-pill shadow-lg">Submit Grade Ranges</button>
       </div>
     </form>
   </div>
+
+  <script>
+    document.getElementById('gradeForm').addEventListener('submit', function (event) {
+      let isValid = true;
+      let warningMessage = document.getElementById('warningMessage');
+      let warningDetails = document.getElementById('warningDetails');
+      let formElements = this.elements;
+
+      // Reset the warning message
+      warningMessage.style.display = 'none';
+      warningDetails.textContent = '';
+
+      // Check each grade input field
+      for (let element of formElements) {
+        if (element.type === "number") {
+          let minValue = parseFloat(element.min);
+          let maxValue = parseFloat(element.max);
+          let value = parseFloat(element.value);
+
+          // Check if the value is empty
+          if (element.value === "") {
+            warningDetails.textContent = "Please fill in all fields.";
+            isValid = false;
+            break;
+          }
+          
+          // Check if the value is within the allowed range
+          if (isNaN(value) || value < minValue || value > maxValue) {
+            warningDetails.textContent = "Please ensure that all values are between 0 and 100.";
+            isValid = false;
+            break;
+          }
+        }
+      }
+
+      // If the form is not valid, show the warning message and prevent submission
+      if (!isValid) {
+        event.preventDefault();
+        warningMessage.style.display = 'block';
+        warningMessage.style.opacity = 1; // Make the warning visible
+
+        // After 5 seconds, fade out the warning message smoothly
+        setTimeout(function () {
+          warningMessage.style.opacity = 0; // Start fading out
+          setTimeout(function () {
+            warningMessage.style.display = 'none'; // Hide the message after fade-out
+          }, 1000); // Matches the duration of the fade-out transition
+        }, 2500); // 5 seconds delay before fading out
+      }
+    });
+  </script>
 
 {% endblock %}

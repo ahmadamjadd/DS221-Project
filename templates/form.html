@@ -1,70 +1,126 @@
 {% extends "layout.html" %}
 
 {% block main %}
-
 <div class="container mt-5">
   {% if warnings %}
     <!-- Alert box for warnings -->
-    <div id="alert-box" class="alert alert-warning alert-dismissible fade show" role="alert">
-      {{ warnings }}
+    <div id="alert-box" class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ warnings }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-
-    <script>
-      // Ensure the alert box is visible after the page is rendered
-      document.getElementById("alert-box").style.display = "block";
-    </script>
   {% endif %}
 
   <!-- Heading -->
-  <h1 class="mb-4 text-center">Upload CSV File</h1>
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-info">Upload CSV File</h1>
+    <p class="text-muted fs-5">Easily upload your CSV file and choose grading options to proceed.</p>
+  </div>
 
-  <!-- Form for uploading CSV -->
-  <form action="/upload" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-    <div class="mb-3">
-      <label for="csv_file" class="form-label">Choose a CSV file</label>
-      <input type="file" id="csv_file" name="csv_file" accept=".csv" class="form-control" required>
-      <div class="invalid-feedback">
-          Please select a valid CSV file.
+  <!-- Statistics Section -->
+  <div class="row text-center text-white mb-5">
+    <div class="col-md-4">
+      <div class="stat-box shadow rounded p-3 bg-info" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="fw-bold">1200+</h2>
+        <p class="fs-5">Files Processed</p>
       </div>
     </div>
-
-    <!-- Dropdown for selecting options -->
-    <div class="mb-3">
-      <label for="options" class="form-label">Select an option</label>
-      <select id="options" name="options" class="form-select" required>
-        <option value="" disabled selected>Select an option</option>
-        <option value="Absolute">Absolute Grading</option>
-        <option value="Relative">Relative Grading</option>
-      </select>
-      <div class="invalid-feedback">
-          Please select an option.
+    <div class="col-md-4">
+      <div class="stat-box shadow rounded p-3 bg-primary" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="fw-bold">99.9%</h2>
+        <p class="fs-5">Accuracy Rate</p>
       </div>
     </div>
-
-    <div class="mb-3">
-      <select id="type" name="type" class="form-select" required>
-        <option value="" disabled selected>Select an option</option>
-        <option value="custom">Custom Grading</option>
-        <option value="fixed">Fixed Grading</option>
-      </select>
-      <div class="invalid-feedback">
-          Please select an option.
+    <div class="col-md-4">
+      <div class="stat-box shadow rounded p-3 bg-secondary" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="fw-bold">5s</h2>
+        <p class="fs-5">Average Processing Time</p>
       </div>
     </div>
+  </div>
 
-    <div class="mb-3">
-      <label for="scaling" class="form-label">Scaling Factor</label>
-      <input type="number" id="scaling" name="scaling" class="form-control" min="0" step="any" placeholder="Enter a positive number" value="0" required>
-      <div class="invalid-feedback">
-          Please enter a valid positive number.
-      </div>
-    </div>
+  <!-- Form -->
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <form action="/upload" method="POST" enctype="multipart/form-data" class="needs-validation shadow p-4 rounded bg-light" novalidate>
+        <!-- File Input -->
+        <div class="mb-4">
+          <label for="csv_file" class="form-label fw-semibold text-info">CSV File</label>
+          <input type="file" id="csv_file" name="csv_file" accept=".csv" class="form-control" required>
+          <div class="invalid-tooltip">Please select a valid CSV file.</div>
+        </div>
 
-    <div class="d-flex justify-content-center">
-      <button type="submit" class="btn btn-primary">Upload</button>
+        <!-- Dropdown: Grading Option -->
+        <div class="mb-4" id="grading-option-container">
+          <label for="options" class="form-label fw-semibold text-info">Grading Option</label>
+          <select id="options" name="options" class="form-select" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Absolute">Absolute Grading</option>
+            <option value="Relative">Relative Grading</option>
+          </select>
+          <div class="invalid-tooltip">Please select a grading option.</div>
+        </div>
+
+        <!-- Dropdown: Grading Type -->
+        <div class="mb-4 d-none" id="grading-type-container">
+          <label for="type" class="form-label fw-semibold text-info">Grading Type</label>
+          <select id="type" name="type" class="form-select" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="custom">Custom Grading</option>
+            <option value="fixed">Fixed Grading</option>
+          </select>
+          <div class="invalid-tooltip">Please select a grading type.</div>
+        </div>
+
+        <!-- Scaling Factor -->
+        <div class="mb-4 d-none" id="scaling-container">
+          <label for="scaling" class="form-label fw-semibold text-info">Scaling Factor</label>
+          <input type="number" id="scaling" name="scaling" class="form-control" min="0" step="any" placeholder="Enter a positive number" value="0" required>
+          <div class="invalid-tooltip">Please enter a valid positive number.</div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-info btn-lg w-100 shadow">
+            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
 
+<!-- AOS Animation Library -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true,
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const gradingOption = document.getElementById("options");
+    const gradingTypeContainer = document.getElementById("grading-type-container");
+    const scalingContainer = document.getElementById("scaling-container");
+
+    gradingOption.addEventListener("change", (event) => {
+      const selectedValue = event.target.value;
+
+      // Show grading type container
+      if (selectedValue) {
+        gradingTypeContainer.classList.remove("d-none");
+      } else {
+        gradingTypeContainer.classList.add("d-none");
+        scalingContainer.classList.add("d-none");
+      }
+
+      // Show scaling container only for "Absolute Grading"
+      if (selectedValue === "Absolute") {
+        scalingContainer.classList.remove("d-none");
+      } else {
+        scalingContainer.classList.add("d-none");
+      }
+    });
+  });
+</script>
 {% endblock %}
