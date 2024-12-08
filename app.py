@@ -70,7 +70,7 @@ def calculate_grades():
     filename = request.args.get('filename')
     option = request.args.get('selected_option')
     type = request.args.get('selected_method')
-    scaling = request.args.get('scaling')
+    scaling = int(request.args.get('scaling'))
 
     if filename:
 
@@ -85,7 +85,7 @@ def calculate_grades():
             
         elif option == "Absolute":
             if type == "fixed":
-                grades = grade_with_hec_absolute(df, scaling)
+                grades = grade_with_hec_absolute(df, scaling=scaling)
             elif type == "custom":
                 return render_template("absolute_threshold.html", option=option)
         rows = grades.values.tolist()
@@ -145,10 +145,10 @@ def custom_marks():
 
 
         filename = session.get('filename')
-        scaling = session.get('scaling')
+        scaling = int(session.get('scaling'))
         if filename:
             df = pd.read_csv(f"uploads/{filename}")
-            marks = grade_with_custom_absolute(df, grade, scaling)
+            marks = grade_with_custom_absolute(df, grade, scaling=scaling)
             rows = marks.values.tolist()
             columns = marks.columns.tolist()
             return render_template("grades.html", columns=columns, rows=rows)

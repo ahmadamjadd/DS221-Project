@@ -1,4 +1,4 @@
-def grade_with_hec_absolute(df, marks_column='marks'):
+def grade_with_hec_absolute(df, marks_column='marks', scaling=0):
     def assign_grade(marks):
         if marks >= 85:
             return 'A'
@@ -22,7 +22,8 @@ def grade_with_hec_absolute(df, marks_column='marks'):
             return 'D'
         else:
             return 'F'
-
+    
+    df[marks_column] += scaling
     df['Grade'] = df[marks_column].apply(assign_grade)
     return df
 
@@ -30,10 +31,10 @@ def grade_with_hec_absolute(df, marks_column='marks'):
 def grade_with_custom_absolute(df, grade_ranges, marks_column='marks', scaling = 0):
     def assign_custom_grade(marks):
         for grade, (lower_limit, upper_limit) in grade_ranges.items():
-            if lower_limit <= marks+scaling < upper_limit:
+            if lower_limit <= marks < upper_limit:
                 return grade.replace("_", " ").title()
         return 'F'
 
-
+    df[marks_column] += scaling
     df['Grade'] = df[marks_column].apply(assign_custom_grade)
     return df
