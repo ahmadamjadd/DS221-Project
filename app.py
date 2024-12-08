@@ -251,5 +251,9 @@ def visualize():
     print('Normalized Marks stats')
     print(df['marks_normalized'].mean(), df['marks_normalized'].std())  
 
+    print(f"Original Marks Min: {df['marks'].min()}, Max: {df['marks'].max()}")
+    print(f"Normalized Marks Min: {df['marks_normalized'].min()}, Max: {df['marks_normalized'].max()}")
+
+
 
     return render_template('visualizations.html', statistics=statistics, graph_paths=graph_paths)

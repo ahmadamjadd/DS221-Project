@@ -28,12 +28,15 @@ def make_graphs(df, filename):
     
     
     plt.figure(figsize=(10, 6))
-    sns.histplot(df['marks_normalized'], kde=True, bins=20, color='purple')
+    sns.histplot(x=df['marks_normalized'], kde=True, bins=20, color='purple')
     plt.title('Normalized Histogram of Marks')
     plt.xlabel('Normalized Marks')
     plt.ylabel('Frequency')
     plt.savefig(f'static/graphs/{filename}_normalized_histogram.png')
     plt.close()
+
+
+    
 
     # 4. Bar plot of grades
     plt.figure(figsize=(10, 6))

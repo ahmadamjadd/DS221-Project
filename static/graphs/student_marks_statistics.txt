@@ -1,0 +1,6 @@
+Mean of Marks: 282.7661093663016
+Median of Marks: 177.7423448250474
+Range of Marks: 3164.427837958774
+Standard Deviation of Marks: 370.98704341217456
+Variance of Marks: 137631.3863797067
+Skewness of Marks: 5.112530469294126
