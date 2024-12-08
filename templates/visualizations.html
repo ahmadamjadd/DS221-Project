@@ -3,4 +3,26 @@
 {% block main %}
 <h1>Here goes the pics</h1>
 
+<!-- Display the saved statistics -->
+<div>
+    <h2>Statistics</h2>
+    <pre>{{ statistics }}</pre> <!-- The statistics will be printed here -->
+</div>
+
+<!-- Display the saved graphs -->
+<div>
+    <h2>Graphs</h2>
+    <h3>Histogram of Marks</h3>
+    <img src="{{ graph_paths['histogram'] }}" alt="Histogram of Marks" width="500" />
+    
+    <h3>Boxplot of Marks</h3>
+    <img src="{{ graph_paths.boxplot }}" alt="Boxplot of Marks" width="500" />
+
+    <h3>Normalized Histogram of Marks</h3>
+    <img src="{{ graph_paths.normalized_histogram }}" alt="Normalized Histogram of Marks" width="500" />
+
+    <h3>Bar Plot of Grades</h3>
+    <img src="{{ graph_paths.grades_barplot }}" alt="Bar Plot of Grades" width="500" />
+</div>
+
 {% endblock %}

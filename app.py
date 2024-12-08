@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'hello'
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+from graphs import *
 
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -75,17 +76,20 @@ def calculate_grades():
     if filename:
 
         df = pd.read_csv(f"uploads/{filename}")
+        session['df'] = df
 
         if option == "Relative":
 
             if type == "fixed":
                 grades = grade_with_hec_thresholds(df)
+                session['marks'] = grades
             elif type == "custom":
                 return render_template("relative_threshold.html", option=option)
             
         elif option == "Absolute":
             if type == "fixed":
                 grades = grade_with_hec_absolute(df, scaling=scaling)
+                session['marks'] = grades
             elif type == "custom":
                 return render_template("absolute_threshold.html", option=option)
         rows = grades.values.tolist()
@@ -151,6 +155,7 @@ def custom_marks():
             marks = grade_with_custom_absolute(df, grade, scaling=scaling)
             rows = marks.values.tolist()
             columns = marks.columns.tolist()
+            session['marks'] = marks
             return render_template("grades.html", columns=columns, rows=rows)
     else:
         return render_template("absolute_threshold.html")
@@ -211,11 +216,40 @@ def custom_relative_marks():
             marks = grade_with_custom_relative(df, grade)
             rows = marks.values.tolist()
             columns = marks.columns.tolist()
+            session['marks'] = marks
             return render_template("grades.html", columns=columns, rows=rows)
     else:
         return render_template("relative_threshold.html")
     
 @app.route("/visualizations", methods=["GET", "POST"])
 def visualize():
+    df = session.get('df')
+    filename = session.get('filename')
+    filename = filename.replace('.csv', '')
+    path = f'static/graphs/{filename}'  # Correct relative path for static files
+    
+    # Assuming make_graphs() generates the necessary files including the .txt file
+    make_graphs(df, filename)
+    
+    # Open the .txt file from the correct path
+    try:
+        with open(f'{path}_statistics.txt', 'r') as f:
+            statistics = f.read()
+    except FileNotFoundError:
+        # Handle the case where the statistics file doesn't exist yet
+        statistics = "Statistics file not found."
 
-    return render_template("visualizations.html")
+    graph_paths = {
+        'histogram': f'{path}_histogram.png',
+        'boxplot': f'{path}_boxplot.png',
+        'normalized_histogram': f'{path}_normalized_histogram.png',
+        'grades_barplot': f'{path}_grades_barplot.png',
+    }
+    
+    print('Normal Marks stats')
+    print(df['marks'].mean(), df['marks'].std())  
+    print('Normalized Marks stats')
+    print(df['marks_normalized'].mean(), df['marks_normalized'].std())  
+
+
+    return render_template('visualizations.html', statistics=statistics, graph_paths=graph_paths)
