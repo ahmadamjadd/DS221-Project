@@ -33,6 +33,7 @@ def upload_file():
     file = request.files['csv_file']
     selected_option = request.form.get('options')
     selected_method = request.form.get('type')
+    scaling = request.form.get('scaling')
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
 
@@ -53,8 +54,9 @@ def upload_file():
             session['filename'] = filename
             session['selected_option'] = selected_option
             session['selected_method'] = selected_method
+            session['scaling'] = scaling
             
-            return redirect(url_for('calculate_grades', filename=filename, selected_option=selected_option, selected_method=selected_method))
+            return redirect(url_for('calculate_grades', filename=filename, selected_option=selected_option, selected_method=selected_method, scaling=scaling))
     
         except Exception as e:
             os.remove(file_path) 
@@ -68,6 +70,7 @@ def calculate_grades():
     filename = request.args.get('filename')
     option = request.args.get('selected_option')
     type = request.args.get('selected_method')
+    scaling = request.args.get('scaling')
 
     if filename:
 
@@ -82,7 +85,7 @@ def calculate_grades():
             
         elif option == "Absolute":
             if type == "fixed":
-                grades = grade_with_hec_absolute(df)
+                grades = grade_with_hec_absolute(df, scaling)
             elif type == "custom":
                 return render_template("absolute_threshold.html", option=option)
         rows = grades.values.tolist()
@@ -142,9 +145,10 @@ def custom_marks():
 
 
         filename = session.get('filename')
+        scaling = session.get('scaling')
         if filename:
             df = pd.read_csv(f"uploads/{filename}")
-            marks = grade_with_custom_absolute(df, grade)
+            marks = grade_with_custom_absolute(df, grade, scaling)
             rows = marks.values.tolist()
             columns = marks.columns.tolist()
             return render_template("grades.html", columns=columns, rows=rows)
