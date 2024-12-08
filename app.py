@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for, send_file
 from flask_session import Session
 import requests
 from werkzeug.utils import secure_filename
@@ -11,6 +11,8 @@ app.secret_key = 'hello'
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 from graphs import *
+import io
+import zipfile
 
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -248,3 +250,37 @@ def visualize():
 
 
     return render_template('visualizations.html', statistics=statistics, graph_paths=graph_paths)
+
+@app.route('/download_zip')
+def download_zip():
+    # Assuming session['marks'] contains a DataFrame or data that can be converted to a DataFrame
+    marks = pd.DataFrame(session['marks'])  # Replace with how 'marks' is stored
+
+    filename = session['filename']
+    filename = filename.replace('.csv', '')
+
+    zip_buffer = io.BytesIO()
+
+    # Create the zip file in memory
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+        # Add graph files to the zip without including the folder structure
+        zf.write(f'static/graphs/{filename}_histogram.png', arcname=f'{filename}_histogram.png')
+        zf.write(f'static/graphs/{filename}_grades_barplot.png', arcname=f'{filename}_grades_barplot.png')
+        zf.write(f'static/graphs/{filename}_boxplot.png', arcname=f'{filename}_boxplot.png')
+        zf.write(f'static/graphs/{filename}_normalized_histogram.png', arcname=f'{filename}_normalized_histogram.png')
+
+        # Save the DataFrame to a CSV and add it to the zip
+        csv_buffer = io.StringIO()  # In-memory text buffer for the CSV
+        marks.to_csv(csv_buffer, index=False)  # Convert DataFrame to CSV format
+        zf.writestr(f'{filename}_marks.csv', csv_buffer.getvalue())  # Add the CSV to the zip
+
+    # Reset the buffer's position to the beginning
+    zip_buffer.seek(0)
+
+    # Serve the zip file
+    return send_file(
+        zip_buffer,
+        as_attachment=True,
+        download_name=f'{filename}_files.zip',  # Customize the zip name
+        mimetype='application/zip'
+    )

@@ -3,6 +3,14 @@
 {% block main %}
 <h1 class="display-5 fw-bold text-info text-center" style="font-weight: 900;">Here are the Statistics and Graphs</h1>
 
+
+<!-- Download Button -->
+<div class="container text-center my-4">
+    <a href="/download_zip" class="btn btn-info btn-lg" role="button" download>
+        <i class="bi bi-download"></i> Download All Files
+    </a>
+</div>
+
 <!-- Display the saved statistics in a beautiful container -->
 <div class="container my-4">
     <div class="card shadow-lg p-4">
@@ -49,19 +57,7 @@
     </div>
 </div>
 
-<div class="text-center my-4">
-    <button id="downloadBtn" class="btn btn-primary">Download All as Zip</button>
-</div>
 
-<script>
-    document.getElementById("downloadBtn").onclick = function() {
-        var filename = "{{ filename }}";  // Pass the dynamic filename from Flask context
-        var link = document.createElement("a");
-        link.href = "{{ url_for('download_files', filename='') }}" + filename;  // The Flask URL for downloading
-        link.download = filename + ".zip"; // Set the filename for the downloaded zip
-        link.click();  // Trigger the download
-    };
-</script>
 
 <script>
     // Function to open the image in the modal
