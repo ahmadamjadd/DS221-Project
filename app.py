@@ -214,3 +214,8 @@ def custom_relative_marks():
             return render_template("grades.html", columns=columns, rows=rows)
     else:
         return render_template("relative_threshold.html")
+    
+@app.route("/visualizations", methods=["GET", "POST"])
+def visualize():
+
+    return render_template("visualizations.html")
