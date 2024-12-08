@@ -245,15 +245,6 @@ def visualize():
         'normalized_histogram': f'{path}_normalized_histogram.png',
         'grades_barplot': f'{path}_grades_barplot.png',
     }
-    
-    print('Normal Marks stats')
-    print(df['marks'].mean(), df['marks'].std())  
-    print('Normalized Marks stats')
-    print(df['marks_normalized'].mean(), df['marks_normalized'].std())  
-
-    print(f"Original Marks Min: {df['marks'].min()}, Max: {df['marks'].max()}")
-    print(f"Normalized Marks Min: {df['marks_normalized'].min()}, Max: {df['marks_normalized'].max()}")
-
 
 
     return render_template('visualizations.html', statistics=statistics, graph_paths=graph_paths)
