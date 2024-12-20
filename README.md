@@ -27,7 +27,7 @@ Input validation ensures data integrity and proper formatting before processing.
 The absolute grading system implements two approaches:
 
 1. HEC Standard Thresholds:
-python
+```python
 A  : >= 85
 A- : 80-84
 B+ : 75-79
@@ -39,7 +39,7 @@ C- : 58-60
 D+ : 54-57
 D  : 50-53
 F  : < 50
-
+```
 
 2. Custom Thresholds:
 The system allows instructors to define custom grade boundaries while maintaining the hierarchical structure of grades.
@@ -50,7 +50,7 @@ The relative grading system uses statistical measures to assign grades:
 1. HEC Standard Method:
 - Utilizes z-scores for grade assignment
 - Grade boundaries based on standard deviations from the mean:
-  
+  ```
   A+ : z ≥ 2.00
   A  : z ≥ 1.50
   A- : z ≥ 1.00
@@ -62,7 +62,7 @@ The relative grading system uses statistical measures to assign grades:
   C- : z ≥ -2.00
   D  : z ≥ -2.50
   F  : z < -2.50
-  
+  ```
 
 2. Custom Distribution:
 Allows instructors to specify custom z-score boundaries for grade assignment.
@@ -77,28 +77,20 @@ The system calculates and reports key statistical measures:
 - Variance
 - Skewness
 
-[INSERT STATISTICS TABLE/VISUALIZATION HERE]
-
 ### 3.2 Distribution Analysis
 The system generates multiple visualizations to analyze grade distributions:
 
 1. Original Grade Distribution
-[INSERT HISTOGRAM OF ORIGINAL GRADES HERE]
 
 2. Normalized Distribution
-[INSERT NORMALIZED HISTOGRAM HERE]
 
 3. Grade Category Distribution
-[INSERT GRADE DISTRIBUTION BAR PLOT HERE]
 
 4. Score Distribution Analysis
-[INSERT BOXPLOT HERE]
 
 ## 4. Results and Analysis
 ### 4.1 Grade Distribution Comparison
 The system provides comparative analysis between original and adjusted grades:
-
-[INSERT GRADE COMPARISON VISUALIZATION HERE]
 
 ### 4.2 Statistical Insights
 Key findings from the statistical analysis:
@@ -141,34 +133,10 @@ Potential improvements for future iterations:
 - Integration with learning management systems
 - Extended reporting capabilities
 
-Here's the updated document with a section for adding your GitHub link as a collaborator:  
-
----
-
-## 6. Conclusion  
-The implemented grading system successfully meets the project requirements by providing:  
-- Flexible grading methodologies  
-- Statistical validity in grade assignment  
-- Comprehensive visualization tools  
-- User-friendly interface  
-- Robust error handling  
-
-The system's ability to handle both absolute and relative grading schemes, coupled with its statistical analysis capabilities, makes it a valuable tool for academic grade management.  
-
-## 7. Future Enhancements  
-Potential improvements for future iterations:  
-- Additional statistical methods for grade adjustment  
-- Enhanced visualization options  
-- Batch processing capabilities  
-- Integration with learning management systems  
-- Extended reporting capabilities  
-
-## 8. Collaborators  
-The project was developed with contributions from:  
-- Muhammad Ahmad Amjad  
-- [Abdullah Ejaz Janjua](https://github.com/abdullahejazjanjua)  
-
----
+## 8. Collaborators
+The project was developed with contributions from:
+- Muhammad Ahmad Amjad
+- [Abdullah Ejaz Janjua](https://github.com/abdullahejazjanjua)
 
 ## Appendix A: Technical Implementation Details
 ### A.1 Dependencies
@@ -180,7 +148,7 @@ The project was developed with contributions from:
 - SciPy (Statistical Calculations)
 
 ### A.2 Key Functions
-python
+```python
 # Grade assignment functions
 grade_with_hec_absolute()
 grade_with_custom_absolute()
@@ -192,3 +160,5 @@ make_graphs()
 
 # Utility functions
 create_zip()
+```
+
