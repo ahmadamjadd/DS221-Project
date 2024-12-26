@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 flask_session/
+~$grading_system_presentation.pptx
+grading_system_presentation.pptx
+Report.docx
 
 # C extensions
 *.so

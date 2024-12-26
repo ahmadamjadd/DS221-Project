@@ -51,12 +51,14 @@ def upload_file():
             format = ["name", "reg", "marks"]
             if [col.lower() for col in columns] != format:
                 os.remove(file_path)
-                warnings = "Enter in specified format"
+                warnings = "Enter in specified format: Name, Reg, Marks"
                 return render_template("form.html", warnings=warnings)
             
             session['filename'] = filename
             session['selected_option'] = selected_option
             session['selected_method'] = selected_method
+            if scaling == '':
+                scaling = 0
             session['scaling'] = scaling
             
             return redirect(url_for('calculate_grades', filename=filename, selected_option=selected_option, selected_method=selected_method, scaling=scaling))
@@ -199,15 +201,15 @@ def custom_relative_marks():
         
         # Create a dictionary with all the collected marks ranges
         grade = {
-            "A_plus": (int(grade_A_plus_min), int(grade_A_plus_max)),
+            "A+": (int(grade_A_plus_min), int(grade_A_plus_max)),
             "A": (int(grade_A_min), int(grade_A_max)),
-            "A_minus": (int(grade_A_minus_min), int(grade_A_minus_max)),
-            "B_plus": (int(grade_B_plus_min), int(grade_B_plus_max)),
+            "A-": (int(grade_A_minus_min), int(grade_A_minus_max)),
+            "B+": (int(grade_B_plus_min), int(grade_B_plus_max)),
             "B": (int(grade_B_min), int(grade_B_max)),
-            "B_minus": (int(grade_B_minus_min), int(grade_B_minus_max)),
-            "C_plus": (int(grade_C_plus_min), int(grade_C_plus_max)),
+            "B-": (int(grade_B_minus_min), int(grade_B_minus_max)),
+            "C+": (int(grade_C_plus_min), int(grade_C_plus_max)),
             "C": (int(grade_C_min), int(grade_C_max)),
-            "C_minus": (int(grade_C_minus_min), int(grade_C_minus_max)),
+            "C-": (int(grade_C_minus_min), int(grade_C_minus_max)),
             "D": (int(grade_D_min), int(grade_D_max))
         }
 
@@ -225,7 +227,7 @@ def custom_relative_marks():
     
 @app.route("/visualizations", methods=["GET", "POST"])
 def visualize():
-    df = session.get('df')
+    df = session.get('marks')
     filename = session.get('filename')
     filename = filename.replace('.csv', '')
     path = f'static/graphs/{filename}'  # Correct relative path for static files

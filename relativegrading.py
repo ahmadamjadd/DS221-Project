@@ -33,7 +33,8 @@ def grade_with_custom_relative(df, grade_ranges, marks_column='marks'):
         z_score = (marks - mean) / std_dev
         for grade, (lower_limit, upper_limit) in grade_ranges.items():
             if lower_limit <= z_score < upper_limit:
-                return grade.replace("_", " ").title()
+                print(grade)
+                return grade
         return 'F'
 
     df['Grade'] = df[marks_column].apply(assign_custom_grade)
